@@ -18,32 +18,60 @@ type Slack struct {
 
 // Notify implements notifier interface
 func (s Slack) Notify(results []Result) error {
+	attach := []slack.Attachment{}
 	for _, result := range results {
 		if !result.Healthy {
-			s.Send(result)
+
+			attach = append(attach, FormatAttachments(result))
 		}
 	}
+	s.Send(attach)
 	return nil
 }
 
-// Send request via Slack API to create incident
-func (s Slack) Send(result Result) error {
+func FormatAttachments(result Result) (slack.Attachment)  {
 	color := "danger"
 	attach := slack.Attachment{}
-	attach.AddField(slack.Field{Title: result.Title, Value: result.Endpoint})
+	attach.AddField(slack.Field{Title: "Endpoint", Value: result.Title})
 	attach.AddField(slack.Field{Title: "Status", Value: strings.ToUpper(fmt.Sprint(result.Status()))})
 	attach.Color = &color
+
+	return attach
+}
+
+func (s Slack) Send(attachments []slack.Attachment) error {
 	payload := slack.Payload{
-		Text:        result.Title,
+		Text:        "'Oh bother' sighed Pooh, 'not again.'",
 		Username:    s.Username,
 		Channel:     s.Channel,
-		Attachments: []slack.Attachment{attach},
+		Attachments: attachments,
 	}
 
 	err := slack.Send(s.Webhook, "", payload)
 	if len(err) > 0 {
 		log.Printf("ERROR: %s", err)
 	}
-	log.Printf("Create request for %s", result.Endpoint)
 	return nil
 }
+
+// Send request via Slack API to create incident
+// func (s Slack) Send(result Result) error {
+// 	color := "danger"
+// 	attach := slack.Attachment{}
+// 	attach.AddField(slack.Field{Title: "Endpoint", Value: result.Title})
+// 	attach.AddField(slack.Field{Title: "Status", Value: strings.ToUpper(fmt.Sprint(result.Status()))})
+// 	attach.Color = &color
+// 	payload := slack.Payload{
+// 		Text:        "'Oh bother' sighed Pooh, 'not again.'",
+// 		Username:    s.Username,
+// 		Channel:     s.Channel,
+// 		Attachments: []slack.Attachment{attach},
+// 	}
+//
+// 	err := slack.Send(s.Webhook, "", payload)
+// 	if len(err) > 0 {
+// 		log.Printf("ERROR: %s", err)
+// 	}
+// 	log.Printf("Create request for %s", result.Endpoint)
+// 	return nil
+// }
