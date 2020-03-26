@@ -25,7 +25,9 @@ func (s Slack) Notify(results []Result) error {
 			attach = append(attach, FormatAttachments(result))
 		}
 	}
-	s.Send(attach)
+	if len(attach) > 0 {
+		s.Send(attach)
+	}
 	return nil
 }
 
