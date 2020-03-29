@@ -1,9 +1,7 @@
 package checkup
 
 import (
-	"fmt"
 	"log"
-	"strings"
 
 	slack "github.com/ashwanthkumar/slack-go-webhook"
 )
@@ -35,7 +33,7 @@ func FormatAttachments(result Result) (slack.Attachment)  {
 	color := "danger"
 	attach := slack.Attachment{}
 	attach.AddField(slack.Field{Title: "Endpoint", Value: result.Title})
-	attach.AddField(slack.Field{Title: "Status", Value: strings.ToUpper(fmt.Sprint(result.Status()))})
+	attach.AddField(slack.Field{Title: "Status", Value: result.Times[0].Status})
 	attach.Color = &color
 
 	return attach

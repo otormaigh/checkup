@@ -574,6 +574,7 @@ const (
 type Attempt struct {
 	RTT   time.Duration `json:"rtt"`
 	Error string        `json:"error,omitempty"`
+	Status string       `json:"status,omitempty"`
 }
 
 // Attempts is a list of Attempt that can be sorted by RTT.
