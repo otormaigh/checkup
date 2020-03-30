@@ -194,7 +194,7 @@ var DefaultHTTPClient = &http.Client{
 		MaxIdleConnsPerHost:   1,
 		DisableCompression:    true,
 		DisableKeepAlives:     true,
-		ResponseHeaderTimeout: 5 * time.Second,
+		ResponseHeaderTimeout: 10 * time.Second,
 	},
 	CheckRedirect: func(req *http.Request, via []*http.Request) error {
 		return http.ErrUseLastResponse
