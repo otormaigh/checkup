@@ -105,6 +105,9 @@ func (c HTTPChecker) doChecks(req *http.Request) Attempts {
 		checks[i].RTT = time.Since(start)
 		if err != nil {
 			checks[i].Error = err.Error()
+			if strings.Contains(strings.ToLower(checks[i].Error), "timeout") {
+				checks[i].Status = "Timeout"
+			}
 			continue
 		}
 		err = c.checkDown(resp)
