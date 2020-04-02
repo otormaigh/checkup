@@ -212,6 +212,8 @@ func (c Checkup) MarshalJSON() ([]byte, error) {
 			providerName = "fs"
 		case SQL:
 			providerName = "sql"
+		case InfluxDB:
+			providerName = "influxDB"
 		default:
 			return result, fmt.Errorf("unknown Storage type: %T", c.Storage)
 		}
@@ -344,6 +346,13 @@ func (c *Checkup) UnmarshalJSON(b []byte) error {
 			c.Storage = storage
 		case "sql":
 			var storage SQL
+			err = json.Unmarshal(raw.Storage, &storage)
+			if err != nil {
+				return err
+			}
+			c.Storage = storage
+		case "influxDB":
+			var storage InfluxDB
 			err = json.Unmarshal(raw.Storage, &storage)
 			if err != nil {
 				return err
